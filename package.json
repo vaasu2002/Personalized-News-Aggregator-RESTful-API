@@ -1,0 +1,19 @@
+{
+  "name": "personalized-news-aggregator-restful-api",
+  "version": "1.0.0",
+  "description": "The Personalized News Aggregator RESTful API is a web service that allows users to fetch news articles from multiple sources based on their preferences. The API aims to provide a convenient and tailored news consumption experience for users by offering them relevant and up-to-date news content from various reliable sources.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "npx nodemon src/index.js"
+  },
+  "author": "vaasu2002",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.4.0",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "http-status-codes": "^2.2.0",
+    "jsonwebtoken": "^9.0.1",
+    "nodemon": "^3.0.1"
+  }
+}
