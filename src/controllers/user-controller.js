@@ -1,9 +1,9 @@
 const { StatusCodes } = require('http-status-codes');
 const { SuccessResponse, ErrorResponse } = require('../utils/common');
+const AppError = require('../utils/errors/app-error');
 const bcrypt = require('bcryptjs');
 const users = require('../users.json')
 const {FsAccess,Auth} = require('../utils/common')
-const jwt = require('jsonwebtoken')
 
 const signup = async (req,res)=>{
     try{
@@ -49,18 +49,32 @@ const signup = async (req,res)=>{
 
 
 const signin = async (req,res)=>{
-    const username = req.body.username;
-    const password = req.body.password;
+    try{
+        const username = req.body.username;
+        const password = req.body.password;
 
 
-    const user = users.find(user => user.username === username);
-    if(!user){
-        console.log('Username does not exists');
-        return res  
-            .status(StatusCodes.BAD_REQUEST)
-            .json('Username does not exists');
+        const user = users.find(user => user.username === username);
+        if(!user){
+            console.log('Username does not exists');
+            return res  
+                .status(StatusCodes.BAD_REQUEST)
+                .json('Username does not exists');
+        }
+        const passwordMatch = Auth.checkPassword(password, user.password);
+        if(!passwordMatch) {
+            throw new AppError('Invalid password', StatusCodes.BAD_REQUEST);
+        }
+        const jwt = Auth.createToken({id: user.id, email: user.email});
+        SuccessResponse.data = jwt;
+        return res
+                .status(StatusCodes.CREATED)
+                .json(SuccessResponse);
+
+    }catch(error){
+        if(error instanceof AppError) throw error;
+        throw new AppError('Something went wrong', StatusCodes.INTERNAL_SERVER_ERROR);
     }
-    console.log(Auth.checkPassword(password,user.password));
 }
 
 module.exports = {
