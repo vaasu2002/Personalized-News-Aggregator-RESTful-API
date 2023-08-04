@@ -34,6 +34,24 @@ function validateCreateUser(req, res, next) {
     next();
 }
 
+function validateAuthRequest(req, res, next) {
+    error_explaination = [];
+    if(!req.body.username) {
+        error_explaination.push('Username not found in the incoming request in the correct form');
+    }
+    if(!req.body.password) {
+        error_explaination.push('password not found in the incoming request in the correct form');
+    }
+    if(error_explaination.length > 0){
+        ErrorResponse.message = 'Something went wrong while creating the user';
+        ErrorResponse.error = new AppError(error_explaination, StatusCodes.BAD_REQUEST);
+        return res
+            .status(StatusCodes.BAD_REQUEST)
+            .json(ErrorResponse);
+    }
+    next();
+}
+
 async function checkAuth(req, res, next) {
     try {
         const response = await UserService.isAuthenticated(req.headers['x-access-token']);
@@ -53,5 +71,6 @@ async function checkAuth(req, res, next) {
 
 module.exports = {
     validateCreateUser,
+    validateAuthRequest,
     checkAuth,
 }

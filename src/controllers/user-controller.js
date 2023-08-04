@@ -38,7 +38,6 @@ const signup = async (req,res)=>{
                 .json(SuccessResponse);
   
         }catch(error){
-            console.log(error)
             ErrorResponse.error = error;
             return res  
                     .status(error.statusCode)
@@ -56,7 +55,6 @@ const signin = async (req,res)=>{
 
         const user = users.find(user => user.username === username);
         if(!user){
-            console.log('Username does not exists');
             throw new AppError('Username does not exists', StatusCodes.BAD_REQUEST);
         }
         const passwordMatch = Auth.checkPassword(password, user.password);
