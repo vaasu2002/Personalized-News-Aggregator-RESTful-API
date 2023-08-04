@@ -2,9 +2,10 @@ const { StatusCodes } = require('http-status-codes');
 const { SuccessResponse, ErrorResponse } = require('../utils/common');
 const bcrypt = require('bcryptjs');
 const users = require('../users.json')
-const {FsAccess} = require('../utils/common')
+const {FsAccess,Auth} = require('../utils/common')
+const jwt = require('jsonwebtoken')
 
-const createUser = async (req,res)=>{
+const signup = async (req,res)=>{
     try{
         const fullname = req.body.fullname;
         const username = req.body.username;
@@ -29,6 +30,7 @@ const createUser = async (req,res)=>{
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString()
         };
+        
         users.push(newUser);
         FsAccess.saveTasks(users);
         SuccessResponse.data = newUser;
@@ -44,6 +46,24 @@ const createUser = async (req,res)=>{
             }
 }
 
+
+
+const signin = async (req,res)=>{
+    const username = req.body.username;
+    const password = req.body.password;
+
+
+    const user = users.find(user => user.username === username);
+    if(!user){
+        console.log('Username does not exists');
+        return res  
+            .status(StatusCodes.BAD_REQUEST)
+            .json('Username does not exists');
+    }
+    console.log(Auth.checkPassword(password,user.password));
+}
+
 module.exports = {
-    createUser
+    signup,
+    signin
 }
