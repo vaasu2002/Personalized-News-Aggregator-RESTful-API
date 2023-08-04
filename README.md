@@ -9,6 +9,9 @@ The Personalized News Aggregator RESTful API is a web service that allows users 
     "fullname":"Admin",
     "username":"admin",
     "email":"admin@admin.com",
+    "preferences":{
+        country:"us"
+    }
     "password":"$2a$10$S.bMQAmaYLQfkG47R1i2buVsBVj8MNC9Quz9z6t9t3t2a2UwvS2te",
     "createdAt":"2022-12-12T12:12:12.000Z",
     "updatedAt":"2022-12-12T12:12:12.000Z"

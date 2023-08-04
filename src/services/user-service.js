@@ -9,7 +9,6 @@ async function isAuthenticated(token) {
         const response = Auth.verifyToken(token);
         return response.id; 
     } catch(error) {
-        console.log(error.name)
         if(error.name === 'JsonWebTokenError') { 
             throw new AppError('Invalid JWT token', StatusCodes.BAD_REQUEST);
         }
