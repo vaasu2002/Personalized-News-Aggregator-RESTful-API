@@ -54,15 +54,20 @@ function validateAuthRequest(req, res, next) {
 
 async function checkAuth(req, res, next) {
     try {
-        const response = await UserService.isAuthenticated(req.headers['x-access-token']);
+        const token = req.headers['x-access-token'];
+        if(!token){
+            throw new AppError('Missing JWT token', StatusCodes.BAD_REQUEST); 
+        }
+        const response = await UserService.isAuthenticated(token);
         if(response) {
             req.user = response; // setting the user id in the req object
             next();
         }
     } catch(error) {
+        ErrorResponse.error = error.explanation
         return res
                 .status(error.statusCode)
-                .json(error);
+                .json(ErrorResponse);
     }
     
 }

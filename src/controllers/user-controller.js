@@ -75,7 +75,30 @@ const signin = async (req,res)=>{
     }
 }
 
+const createUserPreference = async(req,res)=>{
+    try{
+        const id = req.user;
+        const preferences = req.body;
+
+        const userIndex = users.findIndex((user) => user.id === id);
+        users[userIndex] = { ...users[userIndex], ...preferences};
+        FsAccess.saveTasks(users);
+        SuccessResponse.data = users[userIndex];
+        return res
+                .status(StatusCodes.OK)
+                .json(SuccessResponse);
+    }catch(error){
+        ErrorResponse.error = error;
+            return res  
+                    .status(error.statusCode)
+                    .json(ErrorResponse);
+    }
+    
+
+}
+
 module.exports = {
     signup,
-    signin
+    signin,
+    createUserPreference
 }

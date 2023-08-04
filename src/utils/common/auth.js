@@ -25,7 +25,7 @@ function verifyToken(token) {
     try {
         return jwt.verify(token, ServerConfig.JWT_SECRET);
     } catch(error) {
-        console.log(error);
+        // console.log(error);
         throw error;
     }
 }
