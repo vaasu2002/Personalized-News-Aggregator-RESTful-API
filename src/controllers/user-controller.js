@@ -18,7 +18,7 @@ const signup = async (req,res)=>{
         const isEmailTaken = users.some((user) => user.email === email);
         const isUsernameTaken = users.some((user) => user.username === username);
         if (isEmailTaken || isUsernameTaken) {
-            throw new AppError(explanation, StatusCodes.BAD_REQUEST);
+            throw new AppError('Username or email already exists', StatusCodes.BAD_REQUEST);
         }
 
         const newUser = {
@@ -38,6 +38,7 @@ const signup = async (req,res)=>{
                 .json(SuccessResponse);
   
         }catch(error){
+            console.log(error)
             ErrorResponse.error = error;
             return res  
                     .status(error.statusCode)
