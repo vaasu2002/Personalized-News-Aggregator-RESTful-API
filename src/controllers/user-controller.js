@@ -18,8 +18,7 @@ const signup = async (req,res)=>{
         const isEmailTaken = users.some((user) => user.email === email);
         const isUsernameTaken = users.some((user) => user.username === username);
         if (isEmailTaken || isUsernameTaken) {
-            ErrorResponse.error = 'Email or username is already taken';
-            return res.status(StatusCodes.BAD_REQUEST).json(ErrorResponse);
+            throw new AppError(explanation, StatusCodes.BAD_REQUEST);
         }
 
         const newUser = {
@@ -57,9 +56,7 @@ const signin = async (req,res)=>{
         const user = users.find(user => user.username === username);
         if(!user){
             console.log('Username does not exists');
-            return res  
-                .status(StatusCodes.BAD_REQUEST)
-                .json('Username does not exists');
+            throw new AppError('Username does not exists', StatusCodes.BAD_REQUEST);
         }
         const passwordMatch = Auth.checkPassword(password, user.password);
         if(!passwordMatch) {
@@ -72,8 +69,10 @@ const signin = async (req,res)=>{
                 .json(SuccessResponse);
 
     }catch(error){
-        if(error instanceof AppError) throw error;
-        throw new AppError('Something went wrong', StatusCodes.INTERNAL_SERVER_ERROR);
+        ErrorResponse.error = error;
+            return res  
+                    .status(error.statusCode)
+                    .json(ErrorResponse);
     }
 }
 
